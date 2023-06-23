@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:gr_zoom/gr_zoom_options.dart';
 import 'package:gr_zoom/gr_zoom_platform_interface.dart';
 
 class MethodChannelZoom extends ZoomPlatform {
@@ -10,8 +9,6 @@ class MethodChannelZoom extends ZoomPlatform {
       EventChannel('plugins.webcare/zoom_event_stream');
   @override
   Future<List> initZoom(ZoomOptions options) async {
-    assert(options != null);
-
     var optionMap = new Map<String, String>();
     if (options.appKey != null) {
       optionMap.putIfAbsent("appKey", () => options.appKey!);
@@ -22,7 +19,12 @@ class MethodChannelZoom extends ZoomPlatform {
     if (options.jwtToken != null) {
       optionMap.putIfAbsent("jwtToken", () => options.jwtToken!);
     }
+    if (options.disableInviteUrl != null) {
+      optionMap.putIfAbsent(
+          "disableInviteUrl", () => options.disableInviteUrl!);
+    }
     optionMap.putIfAbsent("domain", () => options.domain);
+
     return channel
         .invokeMethod<List>('init', optionMap)
         .then<List>((List? value) => value ?? List.empty());
@@ -30,7 +32,6 @@ class MethodChannelZoom extends ZoomPlatform {
 
   @override
   Future<bool> startMeeting(ZoomMeetingOptions options) async {
-    assert(options != null);
     assert(options.zoomAccessToken != null);
     assert(options.displayName != null);
     var optionMap = new Map<String, String>();
@@ -58,7 +59,6 @@ class MethodChannelZoom extends ZoomPlatform {
 
   @override
   Future<bool> joinMeeting(ZoomMeetingOptions options) async {
-    assert(options != null);
     var optionMap = new Map<String, String>();
     optionMap.putIfAbsent("userId", () => options.userId);
     optionMap.putIfAbsent("meetingId", () => options.meetingId);
@@ -81,8 +81,6 @@ class MethodChannelZoom extends ZoomPlatform {
 
   @override
   Future<List> meetingStatus(String meetingId) async {
-    assert(meetingId != null);
-
     var optionMap = new Map<String, String>();
     optionMap.putIfAbsent("meetingId", () => meetingId);
 
