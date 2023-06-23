@@ -5,3 +5,7 @@
 .pub/
 
 build/
+
+# Downloaded Zoom SDK Files
+**/android/libs/**
+**/ios/MobileRTC.xcframework/**
