@@ -1,10 +1,10 @@
 package com.webcare.zoom;
 
-import us.zoom.sdk.MeetingActivity;
+import us.zoom.sdk.NewMeetingActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-public class MyMeetingActivity extends MeetingActivity {
+public class MyMeetingActivity extends NewMeetingActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
