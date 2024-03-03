@@ -38,6 +38,9 @@ public class ZoomPlugin implements FlutterPlugin, MethodCallHandler,ActivityAwar
     private MethodChannel channel;
     private EventChannel meetingStatusChannel;
     private Context context;
+
+    public static Boolean disableScreenshotAndRecording = false;
+
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         context = flutterPluginBinding.getApplicationContext();
@@ -75,6 +78,8 @@ public class ZoomPlugin implements FlutterPlugin, MethodCallHandler,ActivityAwar
     private void init(final MethodCall methodCall, final MethodChannel.Result result) {
 
         Map<String, String> options = methodCall.arguments();
+
+        disableScreenshotAndRecording = parseBoolean(options, "disableScreenshotAndRecording", false);
 
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 

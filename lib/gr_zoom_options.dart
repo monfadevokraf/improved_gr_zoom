@@ -31,6 +31,8 @@ class ZoomOptions {
   bool? disableVOIP; //--for web
   bool? disableReport; //--for web
   List<String>? meetingInfo; //--for web
+  /// Android only
+  bool disableScreenshotAndRecording;
 
   ZoomOptions(
       {required this.domain,
@@ -75,7 +77,8 @@ class ZoomOptions {
         'dc',
         'enctype',
         'report'
-      ]});
+      ],
+      this.disableScreenshotAndRecording = false});
 }
 
 class ZoomMeetingOptions {

@@ -24,6 +24,10 @@ class MethodChannelZoom extends ZoomPlatform {
           "disableInviteUrl", () => options.disableInviteUrl!);
     }
     optionMap.putIfAbsent("domain", () => options.domain);
+    optionMap.putIfAbsent(
+      'disableScreenshotAndRecording',
+      () => options.disableScreenshotAndRecording.toString(),
+    );
 
     return channel
         .invokeMethod<List>('init', optionMap)
