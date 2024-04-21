@@ -20,6 +20,15 @@ This fork of the package extents on the original package by adding the following
   - Add `noMeetingErrorMessage` to hide the meeting error message.
   - Improved `MeetingViewsOptions` to allow for more customization.
   - Added `InviteOptions` to allow for more customization for the invite options on Android.
+ 
+## How can I import this package?
+
+```yml
+gr_zoom:
+  git:
+    url: git@github.com:AhmedAbouelkher/improved_gr_zoom.git
+    ref: master
+```
 
 ---
 
