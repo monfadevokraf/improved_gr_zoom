@@ -1,4 +1,35 @@
-include: package:flutter_lints/flutter.yaml
+include: package:lint/strict.yaml # For production apps
+# include: package:lint/casual.yaml # For code samples, hackathons and other non-production code
+# include: package:lint/package.yaml # Use this for packages with public API
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+
+# You might want to exclude auto-generated files from dart analysis
+analyzer:
+  errors:
+    invalid_annotation_target: ignore
+    use_build_context_synchronously: error
+    prefer_single_quotes: warning
+  exclude:
+    - "**.g.dart"
+
+# You can customize the lint rules set to your own liking. A list of all rules
+# can be found at https://dart-lang.github.io/linter/lints/options/options.html
+linter:
+  rules:
+    join_return_with_assignment: false
+    prefer_double_quotes: true
+    always_use_package_imports: false
+    prefer_relative_imports: false
+    
+    avoid_classes_with_only_static_members: false
+    close_sinks: true
+    constant_identifier_names: true
+    curly_braces_in_flow_control_structures: true
+    empty_catches: true
+    unnecessary_constructor_name: true
+    flutter_style_todos: true
+    no_wildcard_variable_uses: true
+    avoid_catches_without_on_clauses: true
+    unawaited_futures: true
+    always_put_required_named_parameters_first: true
+    unnecessary_lambdas: true

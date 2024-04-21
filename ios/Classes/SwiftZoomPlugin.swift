@@ -2,39 +2,37 @@ import Flutter
 import UIKit
 import MobileRTC
 
-public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , MobileRTCMeetingServiceDelegate{
-  struct MeetingViewOptions { 
-    static let NO_BUTTON_AUDIO = 2
-    static let NO_BUTTON_LEAVE = 128
-    static let NO_BUTTON_MORE = 16
-    static let NO_BUTTON_PARTICIPANTS = 8
-    static let NO_BUTTON_SHARE = 4
-    static let NO_BUTTON_SWITCH_AUDIO_SOURCE = 512
-    static let NO_BUTTON_SWITCH_CAMERA = 256
-    static let NO_BUTTON_VIDEO = 1
-    static let NO_TEXT_MEETING_ID = 32
-    static let NO_TEXT_PASSWORD = 64
-  }
-
-  var authenticationDelegate: AuthenticationDelegate
-  var eventSink: FlutterEventSink? 
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let messenger = registrar.messenger()
-    let channel = FlutterMethodChannel(name: "plugins.webcare/zoom_channel", binaryMessenger: messenger)
-    let instance = SwiftZoomPlugin() 
-    registrar.addMethodCallDelegate(instance, channel: channel)
-
-    let eventChannel = FlutterEventChannel(name: "plugins.webcare/zoom_event_stream", binaryMessenger: messenger)
-    eventChannel.setStreamHandler(instance)
-  }
-
-  override init(){
-    authenticationDelegate = AuthenticationDelegate()
-  }
-
-
- 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+public class SwiftZoomPlugin: NSObject, FlutterPlugin, FlutterStreamHandler, MobileRTCMeetingServiceDelegate {
+    struct MeetingViewOptions {
+        static let NO_BUTTON_AUDIO = 2
+        static let NO_BUTTON_LEAVE = 128
+        static let NO_BUTTON_MORE = 16
+        static let NO_BUTTON_PARTICIPANTS = 8
+        static let NO_BUTTON_SHARE = 4
+        static let NO_BUTTON_SWITCH_AUDIO_SOURCE = 512
+        static let NO_BUTTON_SWITCH_CAMERA = 256
+        static let NO_BUTTON_VIDEO = 1
+        static let NO_TEXT_MEETING_ID = 32
+        static let NO_TEXT_PASSWORD = 64
+    }
+    
+    var authenticationDelegate: AuthenticationDelegate
+    var eventSink: FlutterEventSink?
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let messenger = registrar.messenger()
+        let channel = FlutterMethodChannel(name: "plugins.webcare/zoom_channel", binaryMessenger: messenger)
+        let instance = SwiftZoomPlugin()
+        registrar.addMethodCallDelegate(instance, channel: channel)
+        
+        let eventChannel = FlutterEventChannel(name: "plugins.webcare/zoom_event_stream", binaryMessenger: messenger)
+        eventChannel.setStreamHandler(instance)
+    }
+    
+    override init() {
+        authenticationDelegate = AuthenticationDelegate()
+    }
+    
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "init":
             self.initZoom(call: call, result: result)
@@ -47,11 +45,10 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
         default:
             result(FlutterMethodNotImplemented)
         }
-  }
-
+    }
+    
     
     public func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        
         switch call.method {
         case "init":
             self.initZoom(call: call, result: result)
@@ -67,7 +64,6 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
     }
     
     public func initZoom(call: FlutterMethodCall, result: @escaping FlutterResult)  {
-        
         let pluginBundle = Bundle(for: type(of: self))
         let pluginBundlePath = pluginBundle.bundlePath
         let arguments = call.arguments as! Dictionary<String, String>
@@ -106,73 +102,63 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
     }
     
     public func joinMeeting(call: FlutterMethodCall, result: FlutterResult) {
-        
-        let meetingService = MobileRTC.shared().getMeetingService()
-        let meetingSettings = MobileRTC.shared().getMeetingSettings()
-        
-        if meetingService != nil {
-            
+        if let meetingService = MobileRTC.shared().getMeetingService(), let meetingSettings = MobileRTC.shared().getMeetingSettings() {
             let arguments = call.arguments as! Dictionary<String, String?>
             
-            meetingSettings?.disableDriveMode(parseBoolean(data: arguments["disableDrive"]!, defaultValue: false))
-            meetingSettings?.disableCall(in: parseBoolean(data: arguments["disableDialIn"]!, defaultValue: false))
-            meetingSettings?.setAutoConnectInternetAudio(parseBoolean(data: arguments["noDisconnectAudio"]!, defaultValue: false))
-            meetingSettings?.setMuteAudioWhenJoinMeeting(parseBoolean(data: arguments["noAudio"]!, defaultValue: false))
-            meetingSettings?.meetingShareHidden = parseBoolean(data: arguments["disableShare"]!, defaultValue: false)
-            meetingSettings?.meetingInviteHidden = parseBoolean(data: arguments["disableInvite"]!, defaultValue: false)
-            meetingSettings?.meetingInviteUrlHidden = parseBoolean(data: arguments["disableInvite"]!, defaultValue: false)
-
+            meetingSettings.disableDriveMode(parseBoolean(data: arguments["disableDrive"]!, defaultValue: false))
+            meetingSettings.disableCall(in: parseBoolean(data: arguments["disableDialIn"]!, defaultValue: false))
+            meetingSettings.setAutoConnectInternetAudio(parseBoolean(data: arguments["noDisconnectAudio"]!, defaultValue: false))
+            meetingSettings.setMuteAudioWhenJoinMeeting(parseBoolean(data: arguments["noAudio"]!, defaultValue: false))
+            meetingSettings.meetingShareHidden = parseBoolean(data: arguments["disableShare"]!, defaultValue: false)
+            meetingSettings.meetingInviteHidden = parseBoolean(data: arguments["disableInvite"]!, defaultValue: false)
+            meetingSettings.meetingInviteUrlHidden = parseBoolean(data: arguments["disableInviteUrl"]!, defaultValue: false)
+            meetingSettings.bottomBarHidden = parseBoolean(data: arguments["noBottomToolbar"]!, defaultValue: false)
             if  arguments["meetingViewOptions"] != nil{
                 let meetingViewOptions = parseInt(data: arguments["meetingViewOptions"]!, defaultValue: 0)
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_AUDIO) != 0 {
-                    meetingSettings?.meetingAudioHidden = true
+                    meetingSettings.meetingAudioHidden = true
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_LEAVE) != 0 {
-                    meetingSettings?.meetingLeaveHidden = true
+                    meetingSettings.meetingLeaveHidden = true
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_MORE) != 0 {
-                    meetingSettings?.meetingMoreHidden = true
+                    meetingSettings.meetingMoreHidden = true
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_PARTICIPANTS) != 0 {
-                    meetingSettings?.meetingParticipantHidden = true
+                    meetingSettings.meetingParticipantHidden = true
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_SWITCH_AUDIO_SOURCE) != 0 {
-                   
+                    
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_SWITCH_CAMERA) != 0 {
                     
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_VIDEO) != 0 {
-                    meetingSettings?.meetingVideoHidden = true
+                    meetingSettings.meetingVideoHidden = true
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_TEXT_MEETING_ID) != 0 {
-                    meetingSettings?.meetingTitleHidden = true
+                    meetingSettings.meetingTitleHidden = true
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_TEXT_PASSWORD) != 0 {
-                    meetingSettings?.meetingPasswordHidden = true
+                    meetingSettings.meetingPasswordHidden = true
                 }
             }
-            let joinMeetingParameters = MobileRTCMeetingJoinParam()
-            joinMeetingParameters.userName = arguments["userId"]!!
-            joinMeetingParameters.meetingNumber = arguments["meetingId"]!!
-           
             
+            let joinMeetingParameters = MobileRTCMeetingJoinParam()
+            joinMeetingParameters.userName = arguments["displayName"]!!
+            joinMeetingParameters.meetingNumber = arguments["meetingId"]!!
             let hasPassword = arguments["meetingPassword"]! != nil
             if hasPassword {
                 joinMeetingParameters.password = arguments["meetingPassword"]!!
             }
             
-            let response = meetingService?.joinMeeting(with: joinMeetingParameters)
-            
-            if let response = response {
-                print("Got response from join: \(response)")
-            }
-            result(true)
+            let response = meetingService.joinMeeting(with: joinMeetingParameters)
+            result(response == MobileRTCMeetError.success)
         } else {
             result(false)
         }
     }
-
+    
     public func startMeeting(call: FlutterMethodCall, result: FlutterResult) {
         
         let meetingService = MobileRTC.shared().getMeetingService()
@@ -188,10 +174,11 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
             meetingSettings?.setMuteAudioWhenJoinMeeting(parseBoolean(data: arguments["noAudio"]!, defaultValue: false))
             meetingSettings?.meetingShareHidden = parseBoolean(data: arguments["disableShare"]!, defaultValue: false)
             meetingSettings?.meetingInviteHidden = parseBoolean(data: arguments["disableInvite"]!, defaultValue: false)
-            meetingSettings?.meetingInviteUrlHidden = parseBoolean(data: arguments["disableInvite"]!, defaultValue: false)
+            meetingSettings?.meetingInviteUrlHidden = parseBoolean(data: arguments["disableInviteUrl"]!, defaultValue: false)
+            meetingSettings?.bottomBarHidden = parseBoolean(data: arguments["noBottomToolbar"]!, defaultValue: false)
             
             if  arguments["meetingViewOptions"] != nil{
-                let meetingViewOptions = parseInt(data: arguments["meetingViewOptions"]!, defaultValue: 0)   
+                let meetingViewOptions = parseInt(data: arguments["meetingViewOptions"]!, defaultValue: 0)
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_AUDIO) != 0 {
                     meetingSettings?.meetingAudioHidden = true
                 }
@@ -205,7 +192,7 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
                     meetingSettings?.meetingParticipantHidden = true
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_SWITCH_AUDIO_SOURCE) != 0 {
-                   
+                    
                 }
                 if (meetingViewOptions & MeetingViewOptions.NO_BUTTON_SWITCH_CAMERA) != 0 {
                     
@@ -226,15 +213,11 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
             user.meetingNumber = arguments["meetingId"]!!
             user.userName = arguments["displayName"]!!
             user.zak = arguments["zoomAccessToken"]!!
-
+            
             let param: MobileRTCMeetingStartParam = user
             
             let response = meetingService?.startMeeting(with: param)
-            
-            if let response = response {
-                print("Got response from start: \(response)")
-            }
-            result(true)
+            result(response == MobileRTCMeetError.success)
         } else {
             result(false)
         }
@@ -269,7 +252,7 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
     
     public func getMeetErrorMessage(_ errorCode: MobileRTCMeetError) -> String {
         
-        let message = "" 
+        let message = ""
         return message
     }
     
@@ -293,14 +276,13 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
         
         return nil
     }
-     
+    
     public func onCancel(withArguments arguments: Any?) -> FlutterError? {
         eventSink = nil
         return nil
     }
     
     private func getStateMessage(_ state: MobileRTCMeetingState?) -> [String] {
-        
         var message: [String]
         switch state {
         case  .idle:
@@ -344,7 +326,7 @@ public class SwiftZoomPlugin: NSObject, FlutterPlugin,FlutterStreamHandler , Mob
     }
 }
 
- 
+
 public class AuthenticationDelegate: NSObject, MobileRTCAuthDelegate {
     
     private var result: FlutterResult?
@@ -357,7 +339,7 @@ public class AuthenticationDelegate: NSObject, MobileRTCAuthDelegate {
     
     
     public func onMobileRTCAuthReturn(_ returnValue: MobileRTCAuthError) {
-
+        
         if returnValue == .success {
             self.result?([0, 0])
         } else {
@@ -378,7 +360,7 @@ public class AuthenticationDelegate: NSObject, MobileRTCAuthDelegate {
     public func getAuthErrorMessage(_ errorCode: MobileRTCAuthError) -> String {
         
         let message = ""
-         
+        
         return message
     }
 }

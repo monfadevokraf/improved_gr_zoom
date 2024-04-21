@@ -1,19 +1,40 @@
 # Flutter Zoom
+
 A Flutter plugin for the Zoom Client SDK.
 
-## Zoom SDK Versions
+## Why do I need to use this package instead of [the original one](https://pub.dev/packages/gr_zoom)?
 
-Android: zoom-sdk-android-5.14.5
- 
-iOS: zoom-sdk-ios-5.14.5
+This fork of the package extents on the original package by adding the following features:
+
+- Fixed minor issues regarding best practices and code quality.
+
+- Added more robust error handling.
+
+- Add more features to the `ZoomMeetingOptions` class:
+  - Replaced `userId` with `displayName` to match the Zoom SDK.
+  - Add `disableInviteUrl` to disable the invite url in the meeting.
+  - Add `noVideo` to hide the video button in the meeting.
+  - Add `noMeetingEndMessage` to hide the meeting end message.
+  - Add `noTitlebar` to hide the title bar in the meeting.
+  - Add `noBottomToolbar` to hide the bottom toolbar in the meeting.
+  - Add `noMeetingErrorMessage` to hide the meeting error message.
+  - Improved `MeetingViewsOptions` to allow for more customization.
+  - Added `InviteOptions` to allow for more customization for the invite options on Android.
+
+---
 
 ## Installation from pub.dev
-https://pub.dev/packages/gr_zoom
+<https://pub.dev/packages/gr_zoom>
+
+Android: zoom-sdk-android-5.14.5
+iOS: zoom-sdk-ios-5.14.5
 
 After install the library, must run the follow script to get some sdk stuff for the first time:
+
 ```shell script
 flutter pub run gr_zoom:unzip_zoom_sdk
 ```
+
 ## Installation from github
 
 ```yaml
@@ -22,7 +43,9 @@ flutter pub run gr_zoom:unzip_zoom_sdk
       url: git@github.com:25LucasAnselmo/gr_zoom.git
       ref: main
 ```
+
 After install the library, must run the follow script to get some sdk stuff for the first time:
+
 ```shell script
 flutter pub run gr_zoom:unzip_zoom_sdk
 ```
@@ -42,7 +65,6 @@ Or in text format add the key:
 <key>NSMicrophoneUsageDescription</key>
 <string>Need to use the microphone for call</string>
 ```
-
 
 Diable BITCODE in the `ios/Podfile`:
 
@@ -77,13 +99,14 @@ end
 
 **NOTE for testing on the iOS simulator**
 
-If you want to use the iOS Simulator to test your app, you will need to ensure you have the iOS Dev Zoom SDK as a dependency. 
+If you want to use the iOS Simulator to test your app, you will need to ensure you have the iOS Dev Zoom SDK as a dependency.
 
 To use the Dev Zoom SDK, run the following
+
 ```shell script
 flutter pub run gr_zoom:unzip_zoom_sdk dev
 ```
-    
+
 To switch back to the normal Zoom SDK, simply run
 
 ```shell script
@@ -99,6 +122,7 @@ minSdkVersion 24
 ```
 
 Disable shrinkResources for release buid
+
 ```
    buildTypes {
         release {
@@ -112,12 +136,13 @@ Disable shrinkResources for release buid
 ```
 
 ## example
+
 - Auth zoom with "SDK App JWT Token"
   - Create SDK App JWT Token
-    - Create SDK Key&Secret https://marketplace.zoom.us/docs/sdk/native-sdks/auth#key-secret-2
-    - Generate JWT Token from https://jwt.io/ for testing. （Get it from your server for distribution，You can get current timestamp from https://www.unixtimestamp.com/. ）   
-      Replace "PAYLOAD" as bellow, Enter your "SDK Secret" in "your-256-bit-secret",Get  "your jwtToken" from the left. 
-      
+    - Create SDK Key&Secret <https://marketplace.zoom.us/docs/sdk/native-sdks/auth#key-secret-2>
+    - Generate JWT Token from <https://jwt.io/> for testing. （Get it from your server for distribution，You can get current timestamp from <https://www.unixtimestamp.com/>. ）
+      Replace "PAYLOAD" as bellow, Enter your "SDK Secret" in "your-256-bit-secret",Get  "your jwtToken" from the left.
+
       ```
       {
         "appKey": "string", // Your SDK key
@@ -126,7 +151,9 @@ Disable shrinkResources for release buid
         "tokenExp": long // should be a timestamp that is at least 30 minutes later than the iat)
       }
       ```
+
       PAYLOAD Example：  
+
       ```
       {
         "appKey": "xxxxxxxxxxxxxxxxxxxx", 
@@ -135,10 +162,12 @@ Disable shrinkResources for release buid
         "tokenExp": 1647017999 
       }
       ```
-  -  replace "your jwtToken" in "zoom/example/lib/join_screen.dart"
+
+  - replace "your jwtToken" in "zoom/example/lib/join_screen.dart"
   
 - If you don't want use jwtToken, You can Auth zoom with "SDK App Key&Secret"
   - Comment out "your jwtToken" and Uncomment "appKey&appSecret", it should be like this:  
+
   ```
   ZoomOptions zoomOptions = new ZoomOptions(
       domain: "zoom.us",
@@ -150,9 +179,6 @@ Disable shrinkResources for release buid
       appSecret: "appSecret", // Replace with with secret got from the Zoom Marketplace ZOOM SDK Section
     );
   ```
-      
-
-
 
 # reference
-https://github.com/25LucasAnselmo/gr_zoom
+<https://github.com/25LucasAnselmo/gr_zoom>
