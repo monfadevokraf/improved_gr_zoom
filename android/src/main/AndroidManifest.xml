@@ -1,12 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.webcare.zoom">
 
+  <!-- To learn more about configuring Key `android:hardwareAccelerated`: 
+    https://devforum.zoom.us/t/android-zoom-sdk-video-not-displaying/87876/2 -->
+
   <application>
     <activity
       android:name="com.webcare.zoom.MyMeetingActivity"
       android:exported="false"
       android:configChanges="orientation|screenSize"
-      android:hardwareAccelerated="false"
+      android:hardwareAccelerated="true"
       android:theme="@style/ZMTheme.SubWindow"
       android:screenOrientation="portrait" />
   </application>
