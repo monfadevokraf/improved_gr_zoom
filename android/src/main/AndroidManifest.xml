@@ -6,6 +6,7 @@
     https://devforum.zoom.us/t/android-zoom-sdk-video-not-displaying/87876/2 -->
 
   <application
+    android:allowBackup="true"
     tools:replace="android:allowBackup">
     <activity
       android:name="com.webcare.zoom.MyMeetingActivity"
