@@ -26,7 +26,7 @@ This fork of the package extents on the original package by adding the following
 ```yml
 gr_zoom:
   git:
-    url: git@github.com:AhmedAbouelkher/improved_gr_zoom.git
+    url: git@github.com:monfadevokraf/improved_gr_zoom.git
     ref: master
 ```
 
